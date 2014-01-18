@@ -5,6 +5,15 @@ from csvpython import easyCSV
 from Tkinter import *
 from tkFileDialog import askopenfilename
 
+################################
+#                              #
+#  Use easyCSV to take input   #
+#  CSV; parse, edit, build,    # 
+#  and output changed CSV.     #
+#                              #
+################################
+
+
 print """  _____  _____   _____   _          _     _    _ _   _          
  |  __ \|  __ \ / ____| | |        | |   | |  | | \ | |   /\    
  | |  | | |__) | |      | |_ ___   | |   | |  | |  \| |  /  \   
@@ -26,21 +35,21 @@ def BrowseFiles():#file explorer
 
 	return filename, filepath
 
-def Singlefy(x):
+def Singlefy(x):#remove trailing 's' from plural nouns in list
 	out = []
 	for row in x:
 		subbed = re.sub('s$', '', row)
 		out.append(subbed)
 	return out
 
-def Plurify(x):
+def Plurify(x):#append 's' to singular nouns in list
 	out = []
 	for row in x:
 		subbed = row + 's'
 		out.append(subbed)
 	return out
 
-def LowerCase(x):
+def LowerCase(x):#make all terms in list lowercase
 	out = []
 	for row in x:
 		row = row.lower()
@@ -48,7 +57,7 @@ def LowerCase(x):
 	return out
 
 
-def countCheck(x):
+def countCheck(x):#verify number of subject and description fields
 	check = x[0]
 	if check.count('subject') > 3:
 		print '\a\a\a\a\n\tCheck \'subject\' fields'
@@ -64,20 +73,13 @@ def countCheck(x):
 		print '\a\a\a\a\n\tCheck \'contributor:author\' fields'
 	return
 
-def validate(x):
+def validate(x):#check for unexpected fields
 	validateList = ['contributor:author','contributor:author','contributor:photographer','coverage:spatial','description:notes','description','description','date:created','date:digitized','format:medium','format:medium','format:extent','format:mimetype','publisher:OLinstitution','publisher:OLrepository','publisher:digital','relation:ispartof','relation:ispartofseries','rights:uri-*','rights-*','subject','subject','subject','subject:lcsh','subject:lcsh','description:notes','title','type','ResourceLocation']
 
 	for record in x[0]:
 		if record not in validateList:
 			print '\a\a\a\a\nUnexpected field: \"%s\"' % record
 	return
-
-#merge two date fields (this is ugly/hacky)
-#for row in data:
-#	if row[index(contributor:author2)] == '':
-#		row[index(contributor:author2)] = row[index(contributor:author1)]
-
-
 
 
 #Get starting REcord ID for sequence
@@ -141,10 +143,6 @@ DateCreated = [re.sub('(\d\d\d\d)-(\d\d)-(\d\d)', '\\2/\\3/\\1', row) for row in
 g.append_column(build, 'Thumbnail Date', DateCreated)
 
 #Thumbnail Work Type
-#ThumbnailWorkType = Singlefy(g.column_by_header(data, 'format:medium'))
-#g.change_header_name(data, 'format:medium','formatmedium1')
-#g.append_column(build, 'Thumbnail Work Type', ThumbnailWorkType)
-
 
 g.change_header_name(data, 'format:medium','formatmedium1')
 g.change_header_name(data, 'format:medium','formatmedium2')
